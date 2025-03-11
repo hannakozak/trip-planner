@@ -1,11 +1,12 @@
+import { Home } from '@/views/Home';
+import { Routes, Route } from 'react-router';
 import './App.css';
-import { Button } from '@/components/ui/button';
 
 function App() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-svh">
-      <Button>Trip Planner</Button>
-    </div>
+    <Routes>
+      <Route index element={<Home />} />
+    </Routes>
   );
 }
 
