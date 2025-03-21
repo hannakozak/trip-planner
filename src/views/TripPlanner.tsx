@@ -3,8 +3,16 @@ import { useState } from 'react';
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 
 export const TripPlanner = () => {
-  const [value, setValue] = useState(null);
-  console.log(value);
+  const [place, setPlace] = useState<Place | null>(null);
+
+  interface Place {
+    label: string;
+    value: {
+      place_id: string;
+      description: string;
+    };
+  }
+
   return (
     <div className="flex flex-col items-center justify-center min-h-svh">
       <h2>Lets plan Your next trip?</h2>
@@ -20,7 +28,11 @@ export const TripPlanner = () => {
           <GooglePlacesAutocomplete
             apiKey={import.meta.env.VITE_GOOGLE_PLACE_API_KEY}
             selectProps={{
-              onChange: () => setValue(value),
+              value: place,
+              onChange: (value: Place | null) => {
+                setPlace(value);
+                console.log(value);
+              },
             }}
           />
           <label className="text-gray-700 font-medium" htmlFor="budget">
