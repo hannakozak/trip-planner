@@ -21,6 +21,16 @@ export const TripPlanner = () => {
       alert('Duration cannot be more than 14 days');
       return;
     }
+    if (
+      !formData?.destination ||
+      !formData?.duration ||
+      !formData?.budget ||
+      !formData?.travelers
+    ) {
+      alert('Please fill all the fields');
+
+      return;
+    }
   };
   interface Place {
     label: string;
