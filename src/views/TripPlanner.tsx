@@ -1,4 +1,5 @@
 import { BudgetOptions } from '@/components/BudgetOptions';
+import { TravelersOptions } from '@/components/TravelerOptionsList';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
@@ -36,7 +37,6 @@ export const TripPlanner = () => {
               },
             }}
           />
-          <BudgetOptions />
           <label className="text-gray-700 font-medium" htmlFor="duration">
             Duration
           </label>
@@ -45,6 +45,14 @@ export const TripPlanner = () => {
             type="number"
             id="duration"
           />
+          <label className="text-gray-700 font-medium" htmlFor="budget">
+            What is Your Budget?
+          </label>
+          <BudgetOptions />
+          <label className="text-gray-700 font-medium" htmlFor="travelers">
+            Number of Travelers?
+          </label>
+          <TravelersOptions />
           <Button type="submit">Plan Trip</Button>
         </form>
       </div>
