@@ -1,12 +1,27 @@
 import { BudgetOptions } from '@/components/BudgetOptions';
 import { TravelersOptions } from '@/components/TravelerOptionsList';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 
 export const TripPlanner = () => {
   const [place, setPlace] = useState<Place | null>(null);
+  const [formData, setFormData] = useState<{ [key: string]: string }>({});
 
+  const handleInputChange = (name: string, value: string) => {
+    setFormData({ ...formData, [name]: value });
+  };
+
+  useEffect(() => {
+    console.log(formData);
+  }, [formData]);
+
+  const onGenerateTrip = () => {
+    if (Number(formData?.duration) > 14) {
+      alert('Duration cannot be more than 14 days');
+      return;
+    }
+  };
   interface Place {
     label: string;
     value: {
@@ -33,7 +48,7 @@ export const TripPlanner = () => {
               value: place,
               onChange: (value: Place | null) => {
                 setPlace(value);
-                console.log(value);
+                handleInputChange('destination', value?.label || '');
               },
             }}
           />
@@ -41,6 +56,9 @@ export const TripPlanner = () => {
             Duration
           </label>
           <input
+            onChange={(event) =>
+              handleInputChange('duration', event.target.value)
+            }
             className="w-full px-4 py-2 border border-gray-300 rounded-sm focus:ring-1"
             type="number"
             id="duration"
@@ -48,12 +66,20 @@ export const TripPlanner = () => {
           <label className="text-gray-700 font-medium" htmlFor="budget">
             What is Your Budget?
           </label>
-          <BudgetOptions />
+          <BudgetOptions
+            handleInputChange={handleInputChange}
+            formData={formData}
+          />
           <label className="text-gray-700 font-medium" htmlFor="travelers">
             Number of Travelers?
           </label>
-          <TravelersOptions />
-          <Button type="submit">Plan Trip</Button>
+          <TravelersOptions
+            handleInputChange={handleInputChange}
+            formData={formData}
+          />
+          <Button onClick={onGenerateTrip} type="submit">
+            Plan Trip
+          </Button>
         </form>
       </div>
     </div>
