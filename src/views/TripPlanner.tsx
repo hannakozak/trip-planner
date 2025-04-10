@@ -1,6 +1,7 @@
 import { BudgetOptions } from '@/components/BudgetOptions';
 import { TravelersOptions } from '@/components/TravelerOptionsList';
 import { Button } from '@/components/ui/button';
+import { generateTravelPlan } from '@/service/geminiService';
 import { useEffect, useState } from 'react';
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 
@@ -16,7 +17,7 @@ export const TripPlanner = () => {
     console.log(formData);
   }, [formData]);
 
-  const onGenerateTrip = () => {
+  const onGenerateTrip = async () => {
     if (Number(formData?.duration) > 14) {
       alert('Duration cannot be more than 14 days');
       return;
@@ -30,6 +31,42 @@ export const TripPlanner = () => {
       alert('Please fill all the fields');
 
       return;
+    }
+
+    const getTravelPrompt = ({
+      location,
+      noOfDays,
+      noOfPeople,
+      budget,
+    }: {
+      location: string;
+      noOfDays: string;
+      noOfPeople: string;
+      budget: string;
+    }) => `
+    Plan a ${noOfDays}-day trip for ${noOfPeople} people to ${location}, within a ${budget} budget.
+    Include daily activities, suggested places to eat, and estimated costs.
+    `;
+
+    const FINAL_PROMPT = getTravelPrompt({
+      location: formData.destination,
+      noOfDays: formData.duration,
+      noOfPeople: formData.travelers,
+      budget: formData.budget,
+    });
+    console.log('Final Prompt:', FINAL_PROMPT);
+    console.log('Form Data:', formData);
+
+    try {
+      const result = await generateTravelPlan.sendMessage(FINAL_PROMPT);
+      console.log('Gemini response:', result);
+      console.log(result?.response?.text());
+    } catch (error) {
+      console.error('Gemini error:', error);
+      alert(
+        'Error generating travel plan. Please try again later.' +
+          ((error as Error)?.message || '')
+      );
     }
   };
   interface Place {
